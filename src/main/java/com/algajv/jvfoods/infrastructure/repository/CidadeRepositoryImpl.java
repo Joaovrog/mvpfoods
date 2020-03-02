@@ -3,13 +3,15 @@ package com.algajv.jvfoods.infrastructure.repository;
 import com.algajv.jvfoods.domain.model.Cidade;
 import com.algajv.jvfoods.domain.repository.CidadeRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class CidadeRepositoryImpl implements CidadeRepository {
 
     @PersistenceContext
@@ -27,11 +29,13 @@ public class CidadeRepositoryImpl implements CidadeRepository {
     }
 
     @Override
+    @Transactional
     public Cidade salvar(Cidade cidade) {
         return manager.merge(cidade);
     }
 
     @Override
+    @Transactional
     public void remover(Cidade cidade) {
         cidade = buscar(cidade.getId());
         manager.remove(cidade);

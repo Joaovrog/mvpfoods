@@ -1,10 +1,7 @@
 package com.algajv.jvfoods.jpa;
 
 import com.algajv.jvfoods.JvfoodsApplication;
-import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Restaurante;
-import com.algajv.jvfoods.domain.repository.RestauranteRepository;
-import com.algajv.jvfoods.infrastructure.repository.CozinhaRepositoryImpl;
 import com.algajv.jvfoods.infrastructure.repository.RestauranteRepositoryImpl;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;

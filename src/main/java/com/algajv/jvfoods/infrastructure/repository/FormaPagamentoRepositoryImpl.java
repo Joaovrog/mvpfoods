@@ -5,6 +5,7 @@ import com.algajv.jvfoods.domain.model.FormaPagamento;
 import com.algajv.jvfoods.domain.repository.CozinhaRepository;
 import com.algajv.jvfoods.domain.repository.FormaPagamentoRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class FormaPagamentoRepositoryImpl implements FormaPagamentoRepository {
 
     @PersistenceContext
