@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/cidades")
@@ -25,13 +26,13 @@ public class CidadeController {
 
     @GetMapping
     public List<Cidade> listar() {
-        return repository.listar();
+        return repository.findAll();
     }
 
     @GetMapping("/{cidade_id}")
     public ResponseEntity<Cidade> buscar(@PathVariable(name="cidade_id") Long id) {
-        Cidade cidade = repository.buscar(id);
-        if (cidade != null) return ResponseEntity.ok(cidade);
+        Optional<Cidade> cidade = repository.findById(id);
+        if (cidade.isPresent()) return ResponseEntity.ok(cidade.get());
         return ResponseEntity.notFound().build();
     }
 
@@ -52,12 +53,12 @@ public class CidadeController {
     public ResponseEntity<?> atualizar(@PathVariable(name="cidade_id") Long id,
                                        @RequestBody Cidade cidade) {
 
-        Cidade cidadeEncontrada = repository.buscar(id);
-        if(cidadeEncontrada != null) {
-            BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
+        Optional<Cidade> cidadeEncontrada = repository.findById(id);
+        if(cidadeEncontrada.isPresent()) {
+            BeanUtils.copyProperties(cidade, cidadeEncontrada.get(), "id");
             try {
-                cidadeEncontrada = service.salvar(cidadeEncontrada);
-                return ResponseEntity.ok(cidadeEncontrada);
+                Cidade cidadeSalva = service.salvar(cidadeEncontrada.get());
+                return ResponseEntity.ok(cidadeSalva);
             } catch (EntidadeNaoEncontradaException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
@@ -68,9 +69,9 @@ public class CidadeController {
 
     @DeleteMapping("/{cidade_id}")
     public ResponseEntity<Restaurante> remover(@PathVariable(name="cidade_id") Long id) {
-        Cidade cidade = repository.buscar(id);
-        if(cidade != null) {
-            repository.remover(cidade);
+        Optional<Cidade> cidade = repository.findById(id);
+        if(cidade.isPresent()) {
+            repository.delete(cidade.get());
             return ResponseEntity.noContent().build();
         }
 

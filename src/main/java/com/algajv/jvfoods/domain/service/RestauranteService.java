@@ -26,6 +26,6 @@ public class RestauranteService {
 
 
         restaurante.setCozinha(cozinha);
-        return repository.salvar(restaurante);
+        return repository.save(restaurante);
     }
 }

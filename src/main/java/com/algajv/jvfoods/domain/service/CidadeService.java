@@ -8,6 +8,8 @@ import com.algajv.jvfoods.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CidadeService {
 
@@ -20,11 +22,11 @@ public class CidadeService {
 
     public Cidade salvar(Cidade cidade) {
         Long idEstado = cidade.getEstado().getId();
-        Estado estado = estadoRepository.buscar(idEstado);
-        if(estado==null) throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro" +
+        Optional<Estado> estado = estadoRepository.findById(idEstado);
+        if(estado.isEmpty()) throw new EntidadeNaoEncontradaException(String.format("Não existe cadastro" +
                 " de estado com o código %d", idEstado));
 
-        cidade.setEstado(estado);
-        return repository.salvar(cidade);
+        cidade.setEstado(estado.get());
+        return repository.save(cidade);
     }
 }
