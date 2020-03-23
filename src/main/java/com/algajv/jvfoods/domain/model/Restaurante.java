@@ -24,6 +24,7 @@ public class Restaurante {
     @Column(name="taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
@@ -47,6 +48,10 @@ public class Restaurante {
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name="restaurante_id"), inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
     private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "restaurante") // Qual o nome da propriedade do dono do relaçionamento (Produto) que se relaciona com Cozinha?
+    private List<Produto> produtos = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -110,6 +115,14 @@ public class Restaurante {
 
     public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 
     @Override

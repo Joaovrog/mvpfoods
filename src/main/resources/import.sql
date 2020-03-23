@@ -27,5 +27,17 @@ insert into permissao (nome, descricao) values ("Visualizar", "Habilita usuário
 
 insert into restaurante_forma_pagamento (restaurante_id, forma_pagamento_id) values (1,1), (1,2), (1,3), (2,2), (2,3), (3,1)
 
+insert into produto(nome, descricao, preco, ativo, restaurante_id) values ('Açaí', 'Açaí 500ml', 8.00, true, 1)
+
+insert into usuario(email, senha, data_cadastro) values ('joao@v.com', '@jekf4', utc_timestamp)
+insert into usuario(email, senha, data_cadastro) values ('lua@frds.com', '@fre968', utc_timestamp)
+insert into usuario(email, senha, data_cadastro) values ('bob@esponja.com', '@e3er35', utc_timestamp)
+
+insert into grupo(nome) values ('Grupo primário'), ('Grupo secundário')
+
+insert into grupo_permissao(grupo_id, permissao_id) values (1,1), (1,2)
+
+insert into usuario_grupo(usuario_id, grupo_id) values (1, 1), (2,1), (3,2)
+
 
 
