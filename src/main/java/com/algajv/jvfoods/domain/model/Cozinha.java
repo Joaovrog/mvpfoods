@@ -1,6 +1,10 @@
 package com.algajv.jvfoods.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -12,6 +16,10 @@ public class Cozinha {
 
     @Column(nullable = false)
     private String nome;
+
+    @JsonIgnore // evitar o loop de serialização na hora de buscar os objetos visualmente.
+    @OneToMany(mappedBy = "cozinha") // Qual o nome da propriedade do dono do relaçionamento (Restaurante) que se relaciona com Cozinha?
+   private List<Restaurante> restaurantes = new ArrayList<>();
 
     public Long getId() {
         return id;
