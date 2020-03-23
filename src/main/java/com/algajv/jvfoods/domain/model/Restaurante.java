@@ -1,6 +1,7 @@
 package com.algajv.jvfoods.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,7 +26,9 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
     @JsonIgnore
-    @ManyToOne
+    @JsonIgnoreProperties("hibernateLazyInitializer") // ignora o campo 'hibernateLazyInitializer' da classe proxy de Cozinha (criada pelo Hibernate em tempo de execução por conta do fetch Lazy), evitando exception de serialização dessa propriedade.
+
+    @ManyToOne(fetch = FetchType.LAZY) // mudando o tipo de fetch padrão!
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
