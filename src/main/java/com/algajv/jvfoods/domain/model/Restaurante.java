@@ -53,6 +53,7 @@ public class Restaurante {
     private List<FormaPagamento> formaPagamentos = new ArrayList<>();
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurante") // Qual o nome da propriedade do dono do relaçionamento (Produto) que se relaciona com Cozinha?
     private List<Produto> produtos = new ArrayList<>();
 

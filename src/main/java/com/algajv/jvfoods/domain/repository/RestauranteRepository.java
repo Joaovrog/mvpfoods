@@ -22,4 +22,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long>,
 
     List<Restaurante> findComFreteGratis(String nome);
 
+    @Query("from Restaurante r join  r.cozinha")
+    List<Restaurante> findAll();
+
 }
