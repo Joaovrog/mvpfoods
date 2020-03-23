@@ -1,9 +1,12 @@
 package com.algajv.jvfoods.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +31,16 @@ public class Restaurante {
     @Embedded
     @JsonIgnore
     private Endereco endereco;
+
+    @CreationTimestamp // informa que a propriedade anotada
+    @Column(nullable = false)
+    @JsonIgnore
+    private LocalDateTime dataCadastro;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    @JsonIgnore
+    private LocalDateTime dataAtualizacao;
 
     @JsonIgnore
     @ManyToMany
@@ -81,6 +94,22 @@ public class Restaurante {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public LocalDateTime getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDateTime dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     @Override
