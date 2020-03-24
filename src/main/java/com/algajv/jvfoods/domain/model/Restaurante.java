@@ -27,7 +27,6 @@ public class Restaurante {
 
     @JsonIgnore
     @JsonIgnoreProperties("hibernateLazyInitializer") // ignora o campo 'hibernateLazyInitializer' da classe proxy de Cozinha (criada pelo Hibernate em tempo de execução por conta do fetch Lazy), evitando exception de serialização dessa propriedade.
-
     @ManyToOne(fetch = FetchType.LAZY) // mudando o tipo de fetch padrão!
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
