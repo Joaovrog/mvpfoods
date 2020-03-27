@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/cidades")
@@ -30,51 +30,30 @@ public class CidadeController {
     }
 
     @GetMapping("/{cidade_id}")
-    public ResponseEntity<Cidade> buscar(@PathVariable(name="cidade_id") Long id) {
-        Optional<Cidade> cidade = repository.findById(id);
-        if (cidade.isPresent()) return ResponseEntity.ok(cidade.get());
-        return ResponseEntity.notFound().build();
+    public Cidade buscar(@PathVariable(name="cidade_id") Long id) {
+        return service.getByIdOrFail(id);
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
-
-        try {
-            cidade =  service.salvar(cidade);
-            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
-
-        } catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Cidade adicionar(@RequestBody Cidade cidade) {
+        return service.salvar(cidade);
     }
 
     @PutMapping("/{cidade_id}")
-    public ResponseEntity<?> atualizar(@PathVariable(name="cidade_id") Long id,
+    public Cidade atualizar(@PathVariable(name="cidade_id") Long id,
                                        @RequestBody Cidade cidade) {
 
-        Optional<Cidade> cidadeEncontrada = repository.findById(id);
-        if(cidadeEncontrada.isPresent()) {
-            BeanUtils.copyProperties(cidade, cidadeEncontrada.get(), "id");
-            try {
-                Cidade cidadeSalva = service.salvar(cidadeEncontrada.get());
-                return ResponseEntity.ok(cidadeSalva);
-            } catch (EntidadeNaoEncontradaException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            }
-        }
-
-        return ResponseEntity.notFound().build();
+        Cidade cidadeEncontrada = service.getByIdOrFail(id);
+        BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
+        return service.salvar(cidadeEncontrada);
     }
 
-    @DeleteMapping("/{cidade_id}")
-    public ResponseEntity<Restaurante> remover(@PathVariable(name="cidade_id") Long id) {
-        Optional<Cidade> cidade = repository.findById(id);
-        if(cidade.isPresent()) {
-            repository.delete(cidade.get());
-            return ResponseEntity.noContent().build();
-        }
 
-        return ResponseEntity.notFound().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{cidade_id}")
+    public void remover(@PathVariable(name="cidade_id") Long id) {
+        service.excluir(id);
     }
 }
