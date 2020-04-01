@@ -1,6 +1,9 @@
 package com.algajv.jvfoods.api.controller;
 
+import com.algajv.jvfoods.api.exceptionhandler.Problema;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
+import com.algajv.jvfoods.domain.exception.EstadoNaoEncontradoException;
+import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cidade;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.CidadeRepository;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -38,7 +42,12 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade adicionar(@RequestBody Cidade cidade) {
-        return service.salvar(cidade);
+
+        try {
+            return service.salvar(cidade);
+        } catch(EstadoNaoEncontradoException e) {
+            throw  new NegocioException(e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{cidade_id}")
@@ -47,7 +56,13 @@ public class CidadeController {
 
         Cidade cidadeEncontrada = service.getByIdOrFail(id);
         BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
-        return service.salvar(cidadeEncontrada);
+
+        try {
+            return service.salvar(cidadeEncontrada);
+        } catch (EstadoNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+
     }
 
 
@@ -55,5 +70,11 @@ public class CidadeController {
     @DeleteMapping("/{cidade_id}")
     public void remover(@PathVariable(name="cidade_id") Long id) {
         service.excluir(id);
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<?> handleEntidadeNaoEncontradaException( EntidadeNaoEncontradaException e) {
+        Problema problema = new Problema(LocalDateTime.now(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
     }
 }

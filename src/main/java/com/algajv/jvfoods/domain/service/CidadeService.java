@@ -1,5 +1,6 @@
 package com.algajv.jvfoods.domain.service;
 
+import com.algajv.jvfoods.domain.exception.CidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.model.Cidade;
@@ -17,7 +18,6 @@ import java.util.Optional;
 public class CidadeService {
 
 
-    private static final String MSG_CIDADE_NAO_ENCONTRADA = "Não existe cadastro de cidade com o código %d";
     private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida pois está em uso.";
     @Autowired
     private CidadeRepository repository;
@@ -37,7 +37,7 @@ public class CidadeService {
         try {
             repository.deleteById(id);
         } catch(EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
+            throw new CidadeNaoEncontradaException(id);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, id));
 
@@ -45,7 +45,7 @@ public class CidadeService {
     }
 
     public Cidade getByIdOrFail(Long cidadeId) {
-        return repository.findById(cidadeId).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+        return repository.findById(cidadeId).orElseThrow(() -> new CidadeNaoEncontradaException(cidadeId));
     }
 
 

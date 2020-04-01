@@ -2,6 +2,7 @@ package com.algajv.jvfoods.api.controller;
 
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
+import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Estado;
 import com.algajv.jvfoods.domain.repository.EstadoRepository;
@@ -38,7 +39,7 @@ public class EstadoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Estado adicionar(@RequestBody Estado estado)   {
-        return service.salvar(estado);
+       return service.salvar(estado);
     }
 
 

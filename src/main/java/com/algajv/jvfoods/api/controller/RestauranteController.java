@@ -1,6 +1,7 @@
 package com.algajv.jvfoods.api.controller;
 
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
+import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.RestauranteRepository;
@@ -41,7 +42,11 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
-        return service.salvar(restaurante);
+        try {
+            return service.salvar(restaurante);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{restrt_id}")
@@ -50,7 +55,11 @@ public class RestauranteController {
 
              Restaurante restauranteEncontrado = service.getByIdOrFail(id);
             BeanUtils.copyProperties(restaurante, restauranteEncontrado, "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
-            return service.salvar(restauranteEncontrado);
+            try {
+                return service.salvar(restauranteEncontrado);
+            } catch(EntidadeNaoEncontradaException e) {
+                throw new NegocioException(e.getMessage(), e);
+            }
     }
 
     @PatchMapping("/{restrt_id}")
