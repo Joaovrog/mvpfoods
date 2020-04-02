@@ -1,20 +1,15 @@
 package com.algajv.jvfoods.api.controller;
 
-import com.algajv.jvfoods.api.exceptionhandler.Problema;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EstadoNaoEncontradoException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cidade;
-import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.CidadeRepository;
 import com.algajv.jvfoods.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -72,9 +67,4 @@ public class CidadeController {
         service.excluir(id);
     }
 
-    @ExceptionHandler(EntidadeNaoEncontradaException.class)
-    public ResponseEntity<?> handleEntidadeNaoEncontradaException( EntidadeNaoEncontradaException e) {
-        Problema problema = new Problema(LocalDateTime.now(), e.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
-    }
 }
