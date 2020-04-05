@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,14 +43,14 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody Cozinha cozinha)   {
+    public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha)   {
         return service.salvar(cozinha);
     }
 
 
     @PutMapping("/{id_cozinha}")
     public Cozinha atualizar(@PathVariable(name="id_cozinha") Long id,
-                                             @RequestBody Cozinha cozinha) {
+                                             @RequestBody @Valid Cozinha cozinha) {
         Cozinha cozinhaEncontrada = service.getByIdOrFail(id);
         BeanUtils.copyProperties(cozinha, cozinhaEncontrada, "id");
         return service.salvar(cozinhaEncontrada);

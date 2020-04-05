@@ -1,6 +1,8 @@
 package com.algajv.jvfoods.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -10,9 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Pedido {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,11 +36,9 @@ public class Pedido {
     private LocalDateTime dataCriacao;
 
     @Column(nullable = true)
-//    @CreationTimestamp
     private LocalDateTime dataConfirmacao;
 
     @Column(nullable = true)
-
     private LocalDateTime dataCancelamento;
 
     @Column(nullable = true)
@@ -60,131 +63,7 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens = new ArrayList<>();
 
-
     private StatusPedido status;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getTaxaFrete() {
-        return taxaFrete;
-    }
-
-    public void setTaxaFrete(BigDecimal taxaFrete) {
-        this.taxaFrete = taxaFrete;
-    }
-
-    public BigDecimal getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(BigDecimal valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public LocalDateTime getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDateTime dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public LocalDateTime getDataConfirmacao() {
-        return dataConfirmacao;
-    }
-
-    public void setDataConfirmacao(LocalDateTime dataConfirmacao) {
-        this.dataConfirmacao = dataConfirmacao;
-    }
-
-    public LocalDateTime getDataCancelamento() {
-        return dataCancelamento;
-    }
-
-    public void setDataCancelamento(LocalDateTime dataCancelamento) {
-        this.dataCancelamento = dataCancelamento;
-    }
-
-    public LocalDateTime getDataEntrega() {
-        return dataEntrega;
-    }
-
-    public void setDataEntrega(LocalDateTime dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
-
-    public Usuario getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Usuario cliente) {
-        this.cliente = cliente;
-    }
-
-    public Endereco getEnderecoEntrega() {
-        return enderecoEntrega;
-    }
-
-    public void setEnderecoEntrega(Endereco enderecoEntrega) {
-        this.enderecoEntrega = enderecoEntrega;
-    }
-
-    public FormaPagamento getFormaPagamento() {
-        return formaPagamento;
-    }
-
-    public void setFormaPagamento(FormaPagamento formaPagamento) {
-        this.formaPagamento = formaPagamento;
-    }
-
-    public Restaurante getRestaurante() {
-        return restaurante;
-    }
-
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
-    }
-
-    public List<ItemPedido> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<ItemPedido> itens) {
-        this.itens = itens;
-    }
-
-    public StatusPedido getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusPedido status) {
-        this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pedido pedido = (Pedido) o;
-        return Objects.equals(id, pedido.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

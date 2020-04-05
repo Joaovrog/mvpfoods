@@ -1,10 +1,16 @@
 package com.algajv.jvfoods.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 public class Problem {
 
     private Integer status;
@@ -13,6 +19,19 @@ public class Problem {
     private String detail;
     private String userMessage;
     private LocalDateTime timestamp;
+    private List<FieldValidated> fields;
+
+
+    // ##############################################
+    @Builder
+    @Getter
+    @Setter
+    public static class FieldValidated {
+        private String name;
+        private String userMessage;
+
+    }
+    // ##############################################
 
     public Problem(Integer status, String type, String title, String detail) {
         this.status = status;
@@ -21,51 +40,4 @@ public class Problem {
         this.detail = detail;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
-
-    public String getUserMessage() {
-        return userMessage;
-    }
-
-    public void setUserMessage(String userMessage) {
-        this.userMessage = userMessage;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

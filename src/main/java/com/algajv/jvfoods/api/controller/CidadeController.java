@@ -1,5 +1,6 @@
 package com.algajv.jvfoods.api.controller;
 
+import com.algajv.jvfoods.Groups;
 import com.algajv.jvfoods.domain.exception.EstadoNaoEncontradoException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cidade;
@@ -8,8 +9,10 @@ import com.algajv.jvfoods.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -36,7 +39,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade adicionar(@RequestBody Cidade cidade) {
+    public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
 
         try {
             return service.salvar(cidade);
@@ -47,7 +50,7 @@ public class CidadeController {
 
     @PutMapping("/{cidade_id}")
     public Cidade atualizar(@PathVariable(name="cidade_id") Long id,
-                                       @RequestBody Cidade cidade) {
+                                       @RequestBody @Valid Cidade cidade) {
 
         Cidade cidadeEncontrada = service.getByIdOrFail(id);
         BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");

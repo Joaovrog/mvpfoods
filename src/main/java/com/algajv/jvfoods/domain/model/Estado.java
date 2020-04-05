@@ -1,44 +1,27 @@
 package com.algajv.jvfoods.domain.model;
 
+import com.algajv.jvfoods.Groups;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Estado {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(groups = Groups.EstadoId.class)
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank
     private String nome;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Estado estado = (Estado) o;
-        return Objects.equals(id, estado.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

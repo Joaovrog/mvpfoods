@@ -8,10 +8,15 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -31,6 +36,10 @@ import java.util.stream.Collectors;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String MSG_ERRO_GENERICO_USUARIO_FINAL = "Ocorreu um erro interno inesperado. Tente novamente.\nSe o problema persistir, contate o administrador do sistema.\n";
+    public static final String MSG_DADOS_INVALIDOS = "Um ou mais campos estão inválidos.";
+
+    @Autowired
+    private MessageSource messageSource;
 
     // EXCEPTION MAIS ESPECÍFICA
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
@@ -64,6 +73,31 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Problem problem = createProblem(status, problemType, e.getMessage());
         problem.setUserMessage(e.getMessage());
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+
+        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+
+
+        BindingResult bindingResult = ex.getBindingResult(); // quais propriedades foram violadas, dentro da exception
+        List<Problem.FieldValidated> problemFields = bindingResult.getFieldErrors().stream().map(fieldError ->  {
+
+            String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+           return  Problem.FieldValidated.builder()
+                    .name(fieldError.getField())
+                    .userMessage(message)
+                    .build();
+        }).collect(Collectors.toList());
+
+
+        Problem problem = createProblem(status, problemType, MSG_DADOS_INVALIDOS);
+        problem.setUserMessage(MSG_DADOS_INVALIDOS);
+        problem.setFields(problemFields);
+        return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
     @ExceptionHandler(Exception.class)

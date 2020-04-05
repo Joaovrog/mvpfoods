@@ -1,8 +1,8 @@
 package com.algajv.jvfoods.api.controller;
 
+import com.algajv.jvfoods.Groups;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
-import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.RestauranteRepository;
 import com.algajv.jvfoods.domain.service.RestauranteService;
@@ -12,17 +12,17 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -46,7 +46,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+    public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante) {
         try {
             return service.salvar(restaurante);
         } catch (EntidadeNaoEncontradaException e) {
@@ -56,7 +56,7 @@ public class RestauranteController {
 
     @PutMapping("/{restrt_id}")
     public Restaurante atualizar(@PathVariable(name="restrt_id") Long id,
-                                       @RequestBody Restaurante restaurante) {
+                                       @RequestBody @Valid Restaurante restaurante) {
 
              Restaurante restauranteEncontrado = service.getByIdOrFail(id);
             BeanUtils.copyProperties(restaurante, restauranteEncontrado, "id", "formaPagamentos", "endereco", "dataCadastro", "produtos");
