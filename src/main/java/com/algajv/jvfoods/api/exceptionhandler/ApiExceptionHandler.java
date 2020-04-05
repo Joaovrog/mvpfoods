@@ -22,12 +22,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    public static final String MSG_ERRO_GENERICO_USUARIO_FINAL = "Ocorreu um erro interno inesperado. Tente novamente.\nSe o problema persistir, contate o administrador do sistema.\n";
 
     // EXCEPTION MAIS ESPECÍFICA
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
@@ -36,6 +39,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         Problem problem = createProblem(status, problemType, e.getMessage());
+        problem.setUserMessage(e.getMessage());  // sendo um problema mais específico, pode-se setar a mesma informação do 'detail' no 'userMessage'.
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
 
@@ -46,6 +50,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             ProblemType problemType = ProblemType.ERRO_DE_NEGOCIO;
             Problem problem = createProblem(status, problemType, e.getMessage());
+            problem.setUserMessage(e.getMessage());
             return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
 
@@ -57,6 +62,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.CONFLICT;
         ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
         Problem problem = createProblem(status, problemType, e.getMessage());
+        problem.setUserMessage(e.getMessage());
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
 
@@ -66,9 +72,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
-        String detail = "Ocorreu um erro interno inesperado. Tente novamente.\nSe o problema persistir, contate o administrador do sistema.\n";
+        String detail = MSG_ERRO_GENERICO_USUARIO_FINAL;
         e.printStackTrace();
         Problem problem = createProblem(status, problemType, detail);
+        problem.setUserMessage(detail);  // sendo um problema mais interno e para o qual o usuário não pode fazer muita coisa, 'uerMessage' recebe uma mensagem mais genérica.
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
 
@@ -85,6 +92,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.CORPO_INVALIDO;
         Problem problem = createProblem(status, problemType, ex.getMessage());
         String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
+        problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
@@ -102,6 +110,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.CORPO_INVALIDO;
         String detail = String.format("O parâmetro  da URL '%s' recebeu um valor de tipo inválido. Corrija com valor de tipo compatível.", ex.getParameter().getParameterName());
         Problem problem = createProblem(status, problemType, detail);
+        problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -111,6 +120,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.RECURSO_NAO_ENCONTRADO;
         String detail = String.format("O recurso '%s', que você tentou acessar, não existe.", ex.getRequestURL());
         Problem problem = createProblem(status, problemType, detail);
+        problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -123,11 +133,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("A propriedade '%s' recebeu um valor de tipo incompatível ('%s'). Corrija para um valor do tipo %s.",
                                         path, ex.getValue(), ex.getTargetType().getSimpleName() );
         Problem problem = createProblem(status, problemType, ex.getMessage());
+        problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
         return handleExceptionInternal(ex, problem, headers, status, request);
 
     }
 
     private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
 
         //concatenando os campos com '.'
         String path = joinPath(ex.getPath());
@@ -136,6 +148,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = String.format("A propriedade '%s' não existe. Corrija ou remova essa propriedade.",
                                         path);
         Problem problem = createProblem(status, problemType, detail);
+        problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
         return handleExceptionInternal(ex, problem, headers, status, request);
 
     }
@@ -161,7 +174,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private Problem createProblem(HttpStatus status, ProblemType problemType, String detail) {
-        return new Problem(status.value(), problemType.getUri(), problemType.getTitle(), detail);
+        Problem problem = new Problem(status.value(), problemType.getUri(), problemType.getTitle(), detail);
+        problem.setTimestamp(LocalDateTime.now());
+        return problem;
     }
 
     private String joinPath(List<Reference> referenceList) {
