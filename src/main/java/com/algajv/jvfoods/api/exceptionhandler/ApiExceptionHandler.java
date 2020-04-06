@@ -1,5 +1,6 @@
 package com.algajv.jvfoods.api.exceptionhandler;
 
+import com.algajv.jvfoods.core.validation.ValidacaoException;
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
@@ -78,31 +79,44 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
+        return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
+    }
 
+    @ExceptionHandler(ValidacaoException.class)
+    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
+        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+
+
+
+    public ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+         String detail = MSG_DADOS_INVALIDOS;
 
-
-        BindingResult bindingResult = ex.getBindingResult(); // quais propriedades foram violadas, dentro da exception
-
-        List<Problem.ObjectValidated> problemObjects = bindingResult.getAllErrors().stream().map(objectError ->  {
+        List<Problem.ObjectValidated> problemObjects = bindingResult.getAllErrors().stream().map(objectError -> {
             String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
             String name = objectError.getObjectName();
             if(objectError instanceof FieldError) {
-                name = ((FieldError)objectError).getField();
+                name = ((FieldError) objectError).getField();
             }
 
-           return  Problem.ObjectValidated.builder()
+            return Problem.ObjectValidated.builder()
                     .name(name)
                     .userMessage(message)
                     .build();
+
         }).collect(Collectors.toList());
 
 
-        Problem problem = createProblem(status, problemType, MSG_DADOS_INVALIDOS);
-        problem.setUserMessage(MSG_DADOS_INVALIDOS);
+        Problem problem = createProblem(status, problemType, detail);
+        problem.setUserMessage(detail);
         problem.setObjects(problemObjects);
+
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleUncaughtException(Exception e, WebRequest request){
@@ -116,6 +130,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problem.setUserMessage(detail);  // sendo um problema mais interno e para o qual o usuário não pode fazer muita coisa, 'uerMessage' recebe uma mensagem mais genérica.
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
+
+
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

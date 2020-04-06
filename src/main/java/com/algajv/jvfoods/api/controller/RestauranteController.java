@@ -1,6 +1,7 @@
 package com.algajv.jvfoods.api.controller;
 
 import com.algajv.jvfoods.Groups;
+import com.algajv.jvfoods.core.validation.ValidacaoException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Restaurante;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +36,9 @@ public class RestauranteController {
 
     @Autowired
     private RestauranteService service;
+
+    @Autowired
+    private SmartValidator smartValidator;
 
     @GetMapping
     public List<Restaurante> listar() {
@@ -71,8 +77,20 @@ public class RestauranteController {
     public Restaurante atualizarParcial(@PathVariable(name="restrt_id") Long id, @RequestBody Map<String, Object> campos, HttpServletRequest servletRequest) {
         Restaurante restauranteEncontrado = service.getByIdOrFail(id);
         merge(campos, restauranteEncontrado, servletRequest);
+        validate(restauranteEncontrado, "restaurante");
+
         return atualizar(id,restauranteEncontrado);
     }
+
+    private void validate(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurante, objectName);
+        smartValidator.validate(restaurante, bindingResult);
+
+        if(bindingResult.hasErrors()) {
+            throw new ValidacaoException(bindingResult);
+        }
+    }
+
 
     private void merge(Map<String, Object> campos, Restaurante restauranteDestino, HttpServletRequest servletRequest) {
 
