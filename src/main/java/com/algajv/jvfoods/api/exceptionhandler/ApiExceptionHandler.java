@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +27,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,12 +83,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 
         BindingResult bindingResult = ex.getBindingResult(); // quais propriedades foram violadas, dentro da exception
-        List<Problem.FieldValidated> problemFields = bindingResult.getFieldErrors().stream().map(fieldError ->  {
 
-            String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+        List<Problem.ObjectValidated> problemObjects = bindingResult.getAllErrors().stream().map(objectError ->  {
+            String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+            String name = objectError.getObjectName();
+            if(objectError instanceof FieldError) {
+                name = ((FieldError)objectError).getField();
+            }
 
-           return  Problem.FieldValidated.builder()
-                    .name(fieldError.getField())
+           return  Problem.ObjectValidated.builder()
+                    .name(name)
                     .userMessage(message)
                     .build();
         }).collect(Collectors.toList());
@@ -96,7 +100,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         Problem problem = createProblem(status, problemType, MSG_DADOS_INVALIDOS);
         problem.setUserMessage(MSG_DADOS_INVALIDOS);
-        problem.setFields(problemFields);
+        problem.setObjects(problemObjects);
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 

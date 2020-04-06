@@ -19,14 +19,14 @@ public class Problem {
     private String detail;
     private String userMessage;
     private LocalDateTime timestamp;
-    private List<FieldValidated> fields;
+    private List<ObjectValidated> objects;
 
 
     // ##############################################
     @Builder
     @Getter
     @Setter
-    public static class FieldValidated {
+    public static class ObjectValidated {
         private String name;
         private String userMessage;
 

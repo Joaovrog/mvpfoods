@@ -1,6 +1,9 @@
 package com.algajv.jvfoods.domain.model;
 
 import com.algajv.jvfoods.Groups;
+import com.algajv.jvfoods.core.validation.Multiplo;
+import com.algajv.jvfoods.core.validation.TaxaFrete;
+import com.algajv.jvfoods.core.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
@@ -33,6 +37,8 @@ public class Restaurante {
     private String nome;
 
     @PositiveOrZero
+//    @TaxaFrete
+    @Multiplo(numero = 5)
     @Column(name="taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
