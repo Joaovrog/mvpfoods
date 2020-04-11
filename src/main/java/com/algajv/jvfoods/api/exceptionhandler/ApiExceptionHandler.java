@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    public static final String MSG_ERRO_GENERICO_USUARIO_FINAL = "Ocorreu um erro interno inesperado. Tente novamente.\nSe o problema persistir, contate o administrador do sistema.\n";
+    public static final String MSG_ERRO_GENERICO_USUARIO_FINAL = "Ocorreu um erro interno inesperado. Tente novamente. Se o problema persistir, contate o administrador do sistema.";
     public static final String MSG_DADOS_INVALIDOS = "Um ou mais campos estão inválidos.";
 
     @Autowired
@@ -147,7 +147,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Problem problem = createProblem(status, problemType, ex.getMessage());
         String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
         problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
-        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+        return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        ProblemType problemType = ProblemType.CORPO_INVALIDO;
+        ProblemType problemType = ProblemType.PARAMETRO_URL_INVALIDO;
         String detail = String.format("O parâmetro  da URL '%s' recebeu um valor de tipo inválido. Corrija com valor de tipo compatível.", ex.getParameter().getParameterName());
         Problem problem = createProblem(status, problemType, detail);
         problem.setUserMessage(MSG_ERRO_GENERICO_USUARIO_FINAL);
@@ -206,15 +206,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
 
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {

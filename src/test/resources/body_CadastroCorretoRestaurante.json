@@ -1,0 +1,7 @@
+{
+  "nome": "Northern Food",
+  "taxaFrete": 10,
+  "cozinha": {
+      "id": 2
+  }
+}
