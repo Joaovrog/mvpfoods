@@ -3,6 +3,7 @@ package com.algajv.jvfoods;
 
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.repository.CozinhaRepository;
+import com.algajv.jvfoods.util.DatabaseCleaner;
 import com.algajv.jvfoods.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,9 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.algajv.jvfoods.util.DatabaseCleaner;
-
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -1,6 +1,8 @@
 package com.algajv.jvfoods.api.controller;
 
-import com.algajv.jvfoods.Groups;
+import com.algajv.jvfoods.api.mapper.CidadeMapper;
+import com.algajv.jvfoods.api.model.dto.CidadeDTO;
+import com.algajv.jvfoods.api.model.inputdto.CidadeInputDTO;
 import com.algajv.jvfoods.domain.exception.EstadoNaoEncontradoException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
 import com.algajv.jvfoods.domain.model.Cidade;
@@ -9,7 +11,6 @@ import com.algajv.jvfoods.domain.service.CidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,43 +27,46 @@ public class CidadeController {
     @Autowired
     private CidadeRepository repository;
 
+    @Autowired
+    private CidadeMapper mapper;
+
     @GetMapping
-    public List<Cidade> listar() {
-        return repository.findAll();
+    public List<CidadeDTO> listar() {
+        return mapper.toListDTO(repository.findAll());
     }
 
     @GetMapping("/{cidade_id}")
-    public Cidade buscar(@PathVariable(name="cidade_id") Long id) {
-        return service.getByIdOrFail(id);
+    public CidadeDTO buscar(@PathVariable(name="cidade_id") Long id) {
+        return mapper.toDTO(service.getByIdOrFail(id));
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
+    public CidadeDTO adicionar(@RequestBody @Valid CidadeInputDTO cidadeInput) {
 
         try {
-            return service.salvar(cidade);
+            Cidade cidade = mapper.inputToEntity(cidadeInput);
+            cidade = service.salvar(cidade);
+            return mapper.toDTO(cidade);
         } catch(EstadoNaoEncontradoException e) {
             throw  new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{cidade_id}")
-    public Cidade atualizar(@PathVariable(name="cidade_id") Long id,
-                                       @RequestBody @Valid Cidade cidade) {
-
-        Cidade cidadeEncontrada = service.getByIdOrFail(id);
-        BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
-
+    public CidadeDTO atualizar(@PathVariable(name="cidade_id") Long id,
+                                       @RequestBody @Valid CidadeInputDTO cidadeInputDTO) {
         try {
-            return service.salvar(cidadeEncontrada);
+            Cidade cidadeEncontrada = service.getByIdOrFail(id);
+            mapper.copyToEntity(cidadeInputDTO, cidadeEncontrada);
+            cidadeEncontrada = service.salvar(cidadeEncontrada);
+            return mapper.toDTO(cidadeEncontrada);
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }
 
     }
-
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{cidade_id}")

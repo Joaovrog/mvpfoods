@@ -1,15 +1,14 @@
 package com.algajv.jvfoods.domain.service;
 
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EstadoNaoEncontradoException;
-import com.algajv.jvfoods.domain.model.Cidade;
 import com.algajv.jvfoods.domain.model.Estado;
 import com.algajv.jvfoods.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EstadoService {
@@ -19,10 +18,12 @@ public class EstadoService {
     @Autowired
     private EstadoRepository repository;
 
+    @Transactional
     public Estado salvar(Estado estado) {
         return repository.save(estado);
     }
 
+    @Transactional
     public void excluir(Long id) {
         try {
             repository.deleteById(id);

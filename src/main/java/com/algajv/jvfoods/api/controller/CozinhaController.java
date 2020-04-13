@@ -1,23 +1,18 @@
 package com.algajv.jvfoods.api.controller;
 
-import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
+import com.algajv.jvfoods.api.mapper.CozinhaMapper;
+import com.algajv.jvfoods.api.model.dto.CozinhaDTO;
+import com.algajv.jvfoods.api.model.inputdto.CozinhaInputDTO;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.repository.CozinhaRepository;
 import com.algajv.jvfoods.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value="/cozinhas")
@@ -29,31 +24,37 @@ public class CozinhaController {
     @Autowired
     private CozinhaService service;
 
+    @Autowired
+    private CozinhaMapper mapper;
+
     @GetMapping
-    public List<Cozinha> listar(){
-        return cozinhaRepository.findAll();
+    public List<CozinhaDTO> listar(){
+        return mapper.toListDTO(cozinhaRepository.findAll());
     }
 
 
     @GetMapping("/{id_cozinha}")
-    public Cozinha buscar(@PathVariable(name="id_cozinha") Long id) {
-        return service.getByIdOrFail(id);
+    public CozinhaDTO buscar(@PathVariable(name="id_cozinha") Long id) {
+        return mapper.toDTO(service.getByIdOrFail(id));
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha)   {
-        return service.salvar(cozinha);
+    public CozinhaDTO adicionar(@RequestBody @Valid CozinhaInputDTO cozinhaInput)   {
+        Cozinha cozinha = mapper.inputToEntity(cozinhaInput);
+        cozinha = service.salvar(cozinha);
+
+        return mapper.toDTO(cozinha);
     }
 
 
     @PutMapping("/{id_cozinha}")
-    public Cozinha atualizar(@PathVariable(name="id_cozinha") Long id,
-                                             @RequestBody @Valid Cozinha cozinha) {
+    public CozinhaDTO atualizar(@PathVariable(name="id_cozinha") Long id,
+                                             @RequestBody @Valid CozinhaInputDTO cozinhaInput) {
         Cozinha cozinhaEncontrada = service.getByIdOrFail(id);
-        BeanUtils.copyProperties(cozinha, cozinhaEncontrada, "id");
-        return service.salvar(cozinhaEncontrada);
+        mapper.copyToEntity(cozinhaInput, cozinhaEncontrada);
+        return mapper.toDTO(service.salvar(cozinhaEncontrada));
 
     }
 

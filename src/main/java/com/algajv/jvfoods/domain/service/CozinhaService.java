@@ -2,15 +2,13 @@ package com.algajv.jvfoods.domain.service;
 
 import com.algajv.jvfoods.domain.exception.CozinhaNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.repository.CozinhaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CozinhaService {
@@ -20,10 +18,12 @@ public class CozinhaService {
     @Autowired
     private CozinhaRepository repository;
 
+    @Transactional
     public Cozinha salvar(Cozinha cozinha) {
         return repository.save(cozinha);
     }
 
+    @Transactional
     public void excluir(Long id) {
         try {
             repository.deleteById(id);

@@ -2,17 +2,14 @@ package com.algajv.jvfoods.domain.service;
 
 import com.algajv.jvfoods.domain.exception.CidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.model.Cidade;
 import com.algajv.jvfoods.domain.model.Estado;
 import com.algajv.jvfoods.domain.repository.CidadeRepository;
-import com.algajv.jvfoods.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CidadeService {
@@ -26,6 +23,7 @@ public class CidadeService {
     private EstadoService estadoService;
 
 
+    @Transactional
     public Cidade salvar(Cidade cidade) {
         Long idEstado = cidade.getEstado().getId();
         Estado estado = estadoService.getByIdOrFail(idEstado);
@@ -33,6 +31,7 @@ public class CidadeService {
         return repository.save(cidade);
     }
 
+    @Transactional
     public void excluir(Long id) {
         try {
             repository.deleteById(id);

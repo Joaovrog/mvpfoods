@@ -4,7 +4,7 @@ import com.algajv.jvfoods.core.validation.ValidacaoException;
 import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
-
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -26,9 +26,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -220,7 +218,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private Problem createProblem(HttpStatus status, ProblemType problemType, String detail) {
         Problem problem = new Problem(status.value(), problemType.getUri(), problemType.getTitle(), detail);
-        problem.setTimestamp(LocalDateTime.now());
+        problem.setTimestamp(OffsetDateTime.now());
         return problem;
     }
 
