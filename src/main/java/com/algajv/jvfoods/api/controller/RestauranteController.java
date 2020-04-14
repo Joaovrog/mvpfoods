@@ -3,6 +3,7 @@ package com.algajv.jvfoods.api.controller;
 import com.algajv.jvfoods.api.mapper.RestauranteMapper;
 import com.algajv.jvfoods.api.model.dto.RestauranteDTO;
 import com.algajv.jvfoods.api.model.inputdto.RestauranteInputDTO;
+import com.algajv.jvfoods.domain.exception.CidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.CozinhaNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
 import com.algajv.jvfoods.domain.exception.NegocioException;
@@ -43,7 +44,7 @@ public class RestauranteController {
     @GetMapping("/{restrt_id}")
     public RestauranteDTO buscar(@PathVariable(name="restrt_id") Long id) {
         Restaurante restaurante = service.getByIdOrFail(id);
-        RestauranteDTO restauranteDTO = null;
+        RestauranteDTO restauranteDTO = mapper.toDTO(restaurante);
 
         return restauranteDTO;
     }
@@ -55,8 +56,8 @@ public class RestauranteController {
 
             Restaurante restaurante = mapper.inputToEntity(restauranteInput);
             return mapper.toDTO(service.salvar(restaurante));
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage(), e);
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
         }
     }
 
@@ -72,7 +73,7 @@ public class RestauranteController {
 
 
             return mapper.toDTO(service.salvar(restauranteEncontrado));
-        } catch(CozinhaNaoEncontradaException e) {
+        } catch(CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -122,5 +123,17 @@ public class RestauranteController {
 //        }
 //    }
 
+
+    @PutMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable(value = "restauranteId") Long restauranteId) {
+        service.ativar(restauranteId);
+    }
+
+    @DeleteMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desativar(@PathVariable(value = "restauranteId") Long restauranteId) {
+        service.desativar(restauranteId);
+    }
 
 }

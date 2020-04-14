@@ -24,25 +24,23 @@ public class Restaurante {
     private Long id;
 
     @Column(nullable = false)
-//    @NotBlank
     private String nome;
 
-//    @PositiveOrZero
-//    @NotNull
+
     @Column(name="taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-//    @JsonIgnore
+
 //    @JsonIgnoreProperties("hibernateLazyInitializer") // ignora o campo 'hibernateLazyInitializer' da classe proxy de Cozinha (criada pelo Hibernate em tempo de execução por conta do fetch Lazy), evitando exception de serialização dessa propriedade.
     @ManyToOne //(fetch = FetchType.LAZY) // mudando o tipo de fetch padrão!
-//    @NotNull
-    @Valid
 //    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
     @Embedded
     private Endereco endereco;
+
+    private Boolean ativo = Boolean.TRUE;
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -59,5 +57,13 @@ public class Restaurante {
 
     @OneToMany(mappedBy = "restaurante") // Qual o nome da propriedade do dono do relaçionamento (Produto) que se relaciona com Cozinha?
     private List<Produto> produtos = new ArrayList<>();
+
+    public void ativar() {
+        setAtivo(true);
+    }
+
+    public void desativar() {
+        setAtivo(false);
+    }
 
 }

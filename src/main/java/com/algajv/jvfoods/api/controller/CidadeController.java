@@ -33,7 +33,7 @@ public class CidadeController {
     @GetMapping
     public List<CidadeDTO> listar() {
         return mapper.toListDTO(repository.findAll());
-    }
+    } 
 
     @GetMapping("/{cidade_id}")
     public CidadeDTO buscar(@PathVariable(name="cidade_id") Long id) {
