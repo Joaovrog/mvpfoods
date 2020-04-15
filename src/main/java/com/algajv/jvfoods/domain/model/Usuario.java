@@ -20,6 +20,9 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String nome;
+
     @Column(nullable = false)
     private String email;
 
@@ -33,5 +36,13 @@ public class Usuario {
     @ManyToMany
     @JoinTable(name="usuario_grupo", joinColumns = @JoinColumn(name="usuario_id"), inverseJoinColumns = @JoinColumn(name = "grupo_id"))
     private List<Grupo> grupos = new ArrayList<>();
+
+    public boolean senhaCoincide(String senha) {
+        return getSenha().equals(senha);
+    }
+
+    public boolean senhaNaoCoincide(String senha) {
+        return !getSenha().equals(senha);
+    }
 
 }
