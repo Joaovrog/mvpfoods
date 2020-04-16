@@ -2,6 +2,7 @@ package com.algajv.jvfoods.domain.service;
 
 import com.algajv.jvfoods.domain.exception.*;
 import com.algajv.jvfoods.domain.model.Grupo;
+import com.algajv.jvfoods.domain.model.Permissao;
 import com.algajv.jvfoods.domain.model.Usuario;
 import com.algajv.jvfoods.domain.repository.GrupoRepository;
 import com.algajv.jvfoods.domain.repository.UsuarioRepository;
@@ -24,6 +25,9 @@ public class UsuarioService {
 
     @Autowired
     private EntityManager manager;
+
+    @Autowired
+    private GrupoService grupoService;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
@@ -48,10 +52,6 @@ public class UsuarioService {
         }
     }
 
-    public Usuario getByIdOrFail(Long usuarioId) {
-        return repository.findById(usuarioId).orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
-    }
-
     @Transactional
     public void atualizaSenha(Long id, String senhaAtual, String novaSenha) {
         Usuario usuario = getByIdOrFail(id);
@@ -60,6 +60,26 @@ public class UsuarioService {
         }
         usuario.setSenha(novaSenha);
 
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = getByIdOrFail(usuarioId);
+        Grupo grupo = grupoService.getByIdOrFail(grupoId);;
+
+        usuario.removerDoGrupo(grupo);
+    }
+
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId) {
+        Usuario usuario = getByIdOrFail(usuarioId);
+        Grupo grupo = grupoService.getByIdOrFail(grupoId);;
+
+        usuario.incluirAoGrupo(grupo);
+    }
+
+    public Usuario getByIdOrFail(Long usuarioId) {
+        return repository.findById(usuarioId).orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
     }
 
 

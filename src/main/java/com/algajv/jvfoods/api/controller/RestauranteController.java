@@ -3,10 +3,7 @@ package com.algajv.jvfoods.api.controller;
 import com.algajv.jvfoods.api.mapper.RestauranteMapper;
 import com.algajv.jvfoods.api.model.dto.RestauranteDTO;
 import com.algajv.jvfoods.api.model.inputdto.RestauranteInputDTO;
-import com.algajv.jvfoods.domain.exception.CidadeNaoEncontradaException;
-import com.algajv.jvfoods.domain.exception.CozinhaNaoEncontradaException;
-import com.algajv.jvfoods.domain.exception.EntidadeNaoEncontradaException;
-import com.algajv.jvfoods.domain.exception.NegocioException;
+import com.algajv.jvfoods.domain.exception.*;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.RestauranteRepository;
@@ -134,6 +131,38 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void desativar(@PathVariable(value = "restauranteId") Long restauranteId) {
         service.desativar(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable(value = "restauranteId") Long restauranteId) {
+        service.fechar(restauranteId);
+    }
+
+    @PutMapping("/{restauranteId}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable(value = "restauranteId") Long restauranteId) {
+        service.abrir(restauranteId);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            service.ativar(restauranteIds);
+        } catch(RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds) {
+        try {
+            service.desativarMultiplos(restauranteIds);
+        } catch(RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
 }

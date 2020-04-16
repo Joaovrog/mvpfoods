@@ -2,6 +2,7 @@ package com.algajv.jvfoods.api.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 import java.math.BigDecimal;
 
@@ -15,4 +16,6 @@ public class RestauranteDTO {
     private CozinhaDTO cozinha;
     private Boolean ativo;
     private EnderecoDTO endereco;
+    private Boolean aberto;
+    private List<UsuarioDTO> responsaveis;
 }

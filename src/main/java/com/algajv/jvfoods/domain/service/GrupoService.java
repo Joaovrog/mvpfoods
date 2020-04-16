@@ -5,6 +5,7 @@ import com.algajv.jvfoods.domain.exception.EntidadeEmUsoException;
 import com.algajv.jvfoods.domain.exception.GrupoNaoEncontradoException;
 import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Grupo;
+import com.algajv.jvfoods.domain.model.Permissao;
 import com.algajv.jvfoods.domain.repository.CozinhaRepository;
 import com.algajv.jvfoods.domain.repository.GrupoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class GrupoService {
 
     @Autowired
     private GrupoRepository repository;
+
+    @Autowired
+    private PermissaoService permissaoService;
 
     @Transactional
     public Grupo salvar(Grupo grupo) {
@@ -37,6 +41,23 @@ public class GrupoService {
 
         }
     }
+
+    @Transactional
+    public void associarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = getByIdOrFail(grupoId);
+        Permissao permissao = permissaoService.getByIdOrFail(permissaoId);
+
+        grupo.adicionarPermissao(permissao);
+    }
+
+    @Transactional
+    public void desassociarPermissao(Long grupoId, Long permissaoId) {
+        Grupo grupo = getByIdOrFail(grupoId);
+        Permissao permissao = permissaoService.getByIdOrFail(permissaoId);
+
+        grupo.removerPermissao(permissao);
+    }
+
 
     public Grupo getByIdOrFail(Long grupoId) {
         return repository.findById(grupoId).orElseThrow(() -> new GrupoNaoEncontradoException(grupoId));

@@ -10,7 +10,9 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -53,10 +55,18 @@ public class Restaurante {
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento",
         joinColumns = @JoinColumn(name="restaurante_id"), inverseJoinColumns = @JoinColumn(name="forma_pagamento_id"))
-    private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+    private Set<FormaPagamento> formaPagamentos = new HashSet<>(); // Set = conjunto. Não aceita elementos duplicados.
 
     @OneToMany(mappedBy = "restaurante") // Qual o nome da propriedade do dono do relaçionamento (Produto) que se relaciona com Cozinha?
     private List<Produto> produtos = new ArrayList<>();
+
+    private Boolean aberto = Boolean.FALSE;
+
+    @ManyToMany
+    @JoinTable(name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name="restaurante_id"), inverseJoinColumns = @JoinColumn(name="usuario_id"))
+    private Set<Usuario> responsaveis = new HashSet<>(); // Set = conjunto. Não aceita elementos duplicados.
+
 
     public void ativar() {
         setAtivo(true);
@@ -65,5 +75,38 @@ public class Restaurante {
     public void desativar() {
         setAtivo(false);
     }
+
+    public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormaPagamentos().remove(formaPagamento);
+    }
+
+    public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormaPagamentos().add(formaPagamento);
+    }
+
+    public boolean associarResponsavel(Usuario usuario) {
+        return getResponsaveis().add(usuario);
+    }
+
+    public boolean desassociarResponsavel(Usuario usuario) {
+        return getResponsaveis().remove(usuario);
+    }
+
+    public void abrir() {
+        setAberto(true);
+    }
+
+    public void fechar() {
+        setAberto(false);
+    }
+
+    public boolean aceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormaPagamentos().contains(formaPagamento);
+    }
+
+    public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
+        return !aceitaFormaPagamento(formaPagamento);
+    }
+
 
 }

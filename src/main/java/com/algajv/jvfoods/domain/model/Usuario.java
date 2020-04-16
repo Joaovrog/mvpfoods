@@ -7,7 +7,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -35,7 +37,7 @@ public class Usuario {
 
     @ManyToMany
     @JoinTable(name="usuario_grupo", joinColumns = @JoinColumn(name="usuario_id"), inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-    private List<Grupo> grupos = new ArrayList<>();
+    private Set<Grupo> grupos = new HashSet<>();
 
     public boolean senhaCoincide(String senha) {
         return getSenha().equals(senha);
@@ -43,6 +45,14 @@ public class Usuario {
 
     public boolean senhaNaoCoincide(String senha) {
         return !getSenha().equals(senha);
+    }
+
+    public boolean incluirAoGrupo(Grupo grupo) {
+        return getGrupos().add(grupo);
+    }
+
+    public boolean removerDoGrupo(Grupo grupo) {
+        return getGrupos().remove(grupo);
     }
 
 }

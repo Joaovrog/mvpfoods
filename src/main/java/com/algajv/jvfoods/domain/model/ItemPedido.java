@@ -17,16 +17,9 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Integer quantidade;
-
-    @Column
     private BigDecimal precoUnitario;
-
-    @Column
     private BigDecimal precoTotal;
-
-    @Column
+    private Integer quantidade;
     private String observacao;
 
     @ManyToOne
@@ -35,6 +28,7 @@ public class ItemPedido {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Pedido produto;
+    private Produto produto;
+
 
 }
