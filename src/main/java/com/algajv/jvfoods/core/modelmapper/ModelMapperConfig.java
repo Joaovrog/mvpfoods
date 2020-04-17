@@ -1,8 +1,11 @@
 package com.algajv.jvfoods.core.modelmapper;
 
 import com.algajv.jvfoods.api.model.dto.EnderecoDTO;
+import com.algajv.jvfoods.api.model.inputdto.ItemPedidoInputDTO;
+import com.algajv.jvfoods.api.model.inputdto.PedidoInputDTO;
 import com.algajv.jvfoods.api.model.inputdto.UsuarioUpdateSenhaInputDTO;
 import com.algajv.jvfoods.domain.model.Endereco;
+import com.algajv.jvfoods.domain.model.ItemPedido;
 import com.algajv.jvfoods.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +17,9 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.createTypeMap(ItemPedidoInputDTO.class, ItemPedido.class)
+                .addMappings(mapper -> mapper.skip(ItemPedido::setId));
 
         modelMapper.createTypeMap(Endereco.class, EnderecoDTO.class)
                 .<String>addMapping(
