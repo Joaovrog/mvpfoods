@@ -41,9 +41,9 @@ public class PedidoController {
         return pedidoResumoMapper.toListDTO(repository.findAll());
     }
 
-    @GetMapping("/{id}")
-    public PedidoDTO buscar(@PathVariable(value = "id") Long pedidoId) {
-        Pedido pedido = pedidoService.getByIdOrFail(pedidoId);
+    @GetMapping("/{codigoPedido}")
+    public PedidoDTO buscar(@PathVariable(value = "codigoPedido") String codigoPedido) {
+        Pedido pedido = pedidoService.getByIdOrFail(codigoPedido);
         return mapper.toDTO(pedido);
     }
 
