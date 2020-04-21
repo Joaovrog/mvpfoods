@@ -8,9 +8,12 @@ import com.algajv.jvfoods.domain.model.Cozinha;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.RestauranteRepository;
 import com.algajv.jvfoods.domain.service.RestauranteService;
+import com.algajv.jvfoods.domain.view.RestauranteView;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +36,16 @@ public class RestauranteController {
     @Autowired
     private RestauranteMapper mapper;
 
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteDTO> listar() {
         return mapper.toListDTO(repository.findAll());
+    }
+
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteDTO> listarResumido() {
+        return listar();
     }
 
     @GetMapping("/{restrt_id}")

@@ -1,5 +1,6 @@
 package com.algajv.jvfoods.api.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,5 +21,7 @@ public class PedidoResumoDTO {
     private OffsetDateTime dataCriacao;
     private UsuarioDTO cliente;
     private RestauranteResumoDTO restaurante;
+
+
 
 }
