@@ -8,12 +8,17 @@ import com.algajv.jvfoods.api.model.inputdto.PedidoInputDTO;
 import com.algajv.jvfoods.domain.model.Pedido;
 import com.algajv.jvfoods.domain.model.Usuario;
 import com.algajv.jvfoods.domain.repository.PedidoRepository;
+import com.algajv.jvfoods.domain.repository.filter.PedidoFilter;
 import com.algajv.jvfoods.domain.service.PedidoService;
 import com.algajv.jvfoods.domain.service.RestauranteService;
+import com.algajv.jvfoods.infrastructure.repository.specification.PedidoSpecifications;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +46,12 @@ public class PedidoController {
     private RestauranteService restauranteService;
 
     @GetMapping
-    public List<PedidoResumoDTO> listar() {
-        return pedidoResumoMapper.toListDTO(repository.findAll());
+    public Page<PedidoResumoDTO> pesquisar(PedidoFilter filter, Pageable pageable) {
+        Page<Pedido> pedidos = repository.findAll(PedidoSpecifications.usandoFiltro(filter), pageable);
+        List<PedidoResumoDTO> pedidoResumoDTOS = pedidoResumoMapper.toListDTO(pedidos.getContent());
+        Page<PedidoResumoDTO> pedidoResumoDTOSPage = new PageImpl<>(pedidoResumoDTOS, pageable, pedidos.getTotalElements());
+
+        return pedidoResumoDTOSPage;
     }
 
     @GetMapping("/{codigoPedido}")

@@ -8,6 +8,9 @@ import com.algajv.jvfoods.domain.repository.CozinhaRepository;
 import com.algajv.jvfoods.domain.service.CozinhaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +31,12 @@ public class CozinhaController {
     private CozinhaMapper mapper;
 
     @GetMapping
-    public List<CozinhaDTO> listar(){
-        return mapper.toListDTO(cozinhaRepository.findAll());
+    public Page<CozinhaDTO> listar(Pageable pageable){
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+        List<CozinhaDTO> cozinhaDTOS = mapper.toListDTO(cozinhasPage.getContent());
+
+        Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhaDTOS, pageable, cozinhasPage.getTotalElements());
+        return cozinhasDTOPage;
     }
 
 

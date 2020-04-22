@@ -2,12 +2,15 @@ package com.algajv.jvfoods.domain.repository;
 
 import com.algajv.jvfoods.domain.model.Pedido;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PedidoRepository extends JpaRepository<Pedido, Long> {
+@Repository
+public interface PedidoRepository extends JpaRepository<Pedido, Long>, JpaSpecificationExecutor<Pedido> {
 
     Optional<Pedido> findByCodigo(String codigo);
 
