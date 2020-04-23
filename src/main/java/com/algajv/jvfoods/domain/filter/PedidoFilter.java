@@ -1,4 +1,4 @@
-package com.algajv.jvfoods.domain.repository.filter;
+package com.algajv.jvfoods.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;

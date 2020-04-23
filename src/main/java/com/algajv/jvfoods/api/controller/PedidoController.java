@@ -5,22 +5,20 @@ import com.algajv.jvfoods.api.mapper.PedidoResumoMapper;
 import com.algajv.jvfoods.api.model.dto.PedidoDTO;
 import com.algajv.jvfoods.api.model.dto.PedidoResumoDTO;
 import com.algajv.jvfoods.api.model.inputdto.PedidoInputDTO;
+import com.algajv.jvfoods.core.data.PageableTranslator;
 import com.algajv.jvfoods.domain.model.Pedido;
 import com.algajv.jvfoods.domain.model.Usuario;
 import com.algajv.jvfoods.domain.repository.PedidoRepository;
-import com.algajv.jvfoods.domain.repository.filter.PedidoFilter;
+import com.algajv.jvfoods.domain.filter.PedidoFilter;
 import com.algajv.jvfoods.domain.service.PedidoService;
 import com.algajv.jvfoods.domain.service.RestauranteService;
 import com.algajv.jvfoods.infrastructure.repository.specification.PedidoSpecifications;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,6 +45,8 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoDTO> pesquisar(PedidoFilter filter, Pageable pageable) {
+        pageable =  traduzirPageable(pageable);
+
         Page<Pedido> pedidos = repository.findAll(PedidoSpecifications.usandoFiltro(filter), pageable);
         List<PedidoResumoDTO> pedidoResumoDTOS = pedidoResumoMapper.toListDTO(pedidos.getContent());
         Page<PedidoResumoDTO> pedidoResumoDTOSPage = new PageImpl<>(pedidoResumoDTOS, pageable, pedidos.getTotalElements());
@@ -71,4 +71,17 @@ public class PedidoController {
         pedido = pedidoService.emitir(pedido);
         return mapper.toDTO(pedido);
     }
+
+    public Pageable traduzirPageable(Pageable pageable) {
+
+        var mapeamento = ImmutableMap.of(
+                "codigo", "codigo",
+                "nomeCliente", "cliente.nome",
+                "restaurante.nome", "restaurante.nome",
+                "valorTotal", "valorTotal"
+        );
+
+        return PageableTranslator.translate(pageable, mapeamento);
+    }
+
 }
