@@ -1,8 +1,10 @@
 package com.algajv.jvfoods.api.model.inputdto;
 
-import com.sun.istack.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
