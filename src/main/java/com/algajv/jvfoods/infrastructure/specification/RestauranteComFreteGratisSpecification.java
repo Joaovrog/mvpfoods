@@ -1,4 +1,4 @@
-package com.algajv.jvfoods.infrastructure.repository.specification;
+package com.algajv.jvfoods.infrastructure.specification;
 
 import com.algajv.jvfoods.domain.model.Restaurante;
 import org.springframework.data.jpa.domain.Specification;
@@ -7,17 +7,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 
-public class RestauranteComNomeSemelhanteSpecification implements Specification<Restaurante> {
+public class RestauranteComFreteGratisSpecification implements Specification<Restaurante> {
 
-    private String nome;
-
-    public RestauranteComNomeSemelhanteSpecification(String nome) {
-        this.nome = nome;
-    }
 
     @Override
     public Predicate toPredicate(Root<Restaurante> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.like(root.get("nome"), '%'+nome+'%');
+        return criteriaBuilder.equal(root.get("taxaFrete"), BigDecimal.ZERO);
     }
 }

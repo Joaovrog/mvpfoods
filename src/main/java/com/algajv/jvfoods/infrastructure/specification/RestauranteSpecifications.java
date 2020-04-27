@@ -1,4 +1,4 @@
-package com.algajv.jvfoods.infrastructure.repository.specification;
+package com.algajv.jvfoods.infrastructure.specification;
 
 import com.algajv.jvfoods.domain.model.Restaurante;
 import org.springframework.data.jpa.domain.Specification;

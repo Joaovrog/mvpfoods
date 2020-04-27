@@ -1,4 +1,4 @@
-package com.algajv.jvfoods.infrastructure.repository.service;
+package com.algajv.jvfoods.infrastructure.service.query;
 
 import com.algajv.jvfoods.domain.filter.VendaDiariaFilter;
 import com.algajv.jvfoods.domain.model.Pedido;

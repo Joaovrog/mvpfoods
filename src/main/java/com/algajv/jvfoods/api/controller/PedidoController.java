@@ -12,7 +12,7 @@ import com.algajv.jvfoods.domain.repository.PedidoRepository;
 import com.algajv.jvfoods.domain.filter.PedidoFilter;
 import com.algajv.jvfoods.domain.service.PedidoService;
 import com.algajv.jvfoods.domain.service.RestauranteService;
-import com.algajv.jvfoods.infrastructure.repository.specification.PedidoSpecifications;
+import com.algajv.jvfoods.infrastructure.specification.PedidoSpecifications;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

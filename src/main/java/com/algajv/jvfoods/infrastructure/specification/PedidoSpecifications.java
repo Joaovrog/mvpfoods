@@ -1,4 +1,4 @@
-package com.algajv.jvfoods.infrastructure.repository.specification;
+package com.algajv.jvfoods.infrastructure.specification;
 
 import com.algajv.jvfoods.domain.model.Pedido;
 import com.algajv.jvfoods.domain.filter.PedidoFilter;

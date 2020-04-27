@@ -3,6 +3,7 @@ package com.algajv.jvfoods.infrastructure.repository;
 import com.algajv.jvfoods.domain.model.Restaurante;
 import com.algajv.jvfoods.domain.repository.RestauranteRepository;
 import com.algajv.jvfoods.domain.repository.RestauranteRepositoryQueries;
+import com.algajv.jvfoods.infrastructure.specification.RestauranteSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -18,9 +19,6 @@ import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.algajv.jvfoods.infrastructure.repository.specification.RestauranteSpecifications.comFreteGratis;
-import static com.algajv.jvfoods.infrastructure.repository.specification.RestauranteSpecifications.comNomeSemelhante;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
@@ -63,6 +61,6 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
     @Override
     public List<Restaurante> findComFreteGratis(String nome) {
 
-        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
+        return restauranteRepository.findAll(RestauranteSpecifications.comFreteGratis().and(RestauranteSpecifications.comNomeSemelhante(nome)));
     }
 }
