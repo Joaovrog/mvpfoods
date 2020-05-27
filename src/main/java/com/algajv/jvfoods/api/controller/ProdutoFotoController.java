@@ -20,7 +20,7 @@ public class ProdutoFotoController {
                               @Valid FotoProdutoInput fotoProdutoInput) {
 
         var nomeArquivo = UUID.randomUUID().toString() + "_" + fotoProdutoInput.getArquivo().getOriginalFilename();
-        var arquivoFoto = Path.of("/home/joaovrog/Desktop/catalogo", nomeArquivo);
+        var arquivoFoto = Path.of("/home/joaovrog/DEV/catalogo", nomeArquivo);
 
         System.out.println(fotoProdutoInput.getDescricao());
         System.out.println(arquivoFoto);

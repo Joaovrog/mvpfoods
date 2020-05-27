@@ -53,7 +53,59 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.bohman</groupId>
+			<artifactId>squiggly-filter-jackson</artifactId>
+			<version>1.13.18</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.10.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>6.10.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.1</version>
+		</dependency>
+    </dependencies>
 
 	<dependencyManagement>
 		<dependencies>
@@ -81,57 +133,57 @@
 				<artifactId>jackson-dataformat-xml</artifactId>
 			</dependency>
 
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.apache.commons</groupId>-->
+<!--				<artifactId>commons-lang3</artifactId>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.projectlombok</groupId>-->
+<!--				<artifactId>lombok</artifactId>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>io.rest-assured</groupId>
-				<artifactId>rest-assured</artifactId>
-				<scope>test</scope>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>io.rest-assured</groupId>-->
+<!--				<artifactId>rest-assured</artifactId>-->
+<!--				<scope>test</scope>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
-				<artifactId>groovy-all</artifactId>
-				<scope>test</scope>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.codehaus.groovy</groupId>-->
+<!--				<artifactId>groovy-all</artifactId>-->
+<!--				<scope>test</scope>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>org.modelmapper</groupId>
-				<artifactId>modelmapper</artifactId>
-				<version>2.3.1</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.modelmapper</groupId>-->
+<!--				<artifactId>modelmapper</artifactId>-->
+<!--				<version>2.3.1</version>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>com.github.bohman</groupId>
-				<artifactId>squiggly-filter-jackson</artifactId>
-				<version>1.13.18</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>com.github.bohman</groupId>-->
+<!--				<artifactId>squiggly-filter-jackson</artifactId>-->
+<!--				<version>1.13.18</version>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>net.sf.jasperreports</groupId>
-				<artifactId>jasperreports</artifactId>
-				<version>6.10.0</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>net.sf.jasperreports</groupId>-->
+<!--				<artifactId>jasperreports</artifactId>-->
+<!--				<version>6.10.0</version>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>net.sf.jasperreports</groupId>
-				<artifactId>jasperreports-functions</artifactId>
-				<version>6.10.0</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>net.sf.jasperreports</groupId>-->
+<!--				<artifactId>jasperreports-functions</artifactId>-->
+<!--				<version>6.10.0</version>-->
+<!--			</dependency>-->
 
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-collections4</artifactId>
-				<version>4.1</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>org.apache.commons</groupId>-->
+<!--				<artifactId>commons-collections4</artifactId>-->
+<!--				<version>4.1</version>-->
+<!--			</dependency>-->
 
 		</dependencies>
 
